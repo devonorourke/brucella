@@ -44,6 +44,3 @@ Meyer, on pages 265-266, suggests that researchers have split into two camps, of
 - Rodents require doses of infection too large to accumulate in a large number of animals to persist just within the population itself. Rodents couldn't give this to other rodents. ... *what about in milk though?*  
 
 **The final takeaway** - Meyer seems to side with Rodent-associated Brucella as being derived from another source. It's not ancestral, except for *B. neotomae*, which they don't have a specific answer for its origin, other than it is the only example of a rodent-speciic organism.  
-- 
-
-2) *B. suis* is the ancestral state. A
