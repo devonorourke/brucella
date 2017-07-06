@@ -25,3 +25,25 @@ This was a follow up to Cook et al., 1966, which had left unclear whether Brucel
   - the agglutinability in monospecific antisera
   - hydrogen sulfide production  
 ** Each of these patterns can vary among *B. suis* strains, which makes me think that a genomic approach may reveal different patterns of shared ancestry**.  
+
+Meyer presents a few interesting pieces of information to contrast:  
+- Some *Brucella* are extremely similar with respect to DNA:DNA hybridization studies (94-100%), while others are not particularly similar for species within the same genera (only ~70% similar)
+- Phenotypic plasticity persists despite such DNA similarity. There is diversity in host range of infectivity, physilogical and biochemical characteristics, and morphology.
+
+Meyer, on pages 265-266, suggests that researchers have split into two camps, of which many of these questions could be tested...    
+1) *B. suis* and *B. neotomae* share a common ancestor, and it was a rodent:  
+- That ** *B. neotomae* represents a sister clade to *B. suis* which shared an ancestral strain circulated in rodents before hoofed animals diverged from rodents**. From what I can gather, that's an indication that *Brucella* have been with Mammals a really long time
+  - this split is around 100 million years ago between the hooved decendents (Laurasiatheria) and the rodents (Rodentia). Check out [this paper](http://www.utheria.org/uploads/nature05634.pdf) for details. 
+-  ** *B. suis* is really a broader collection of both *B. suis* and *B. neotomae* - they shared a common ancestor while *B. neotomae* represents tha archetypal rodent Brucella** - it was *B. suis* before *B. suis* was transmitted into hooved animals. 
+  - One thing you can test, then, is gene loss. One would expect that *B. suis* strains share more functional genes with *B. neotomae* than other strains, **but what about B. canis**?
+- ** *B. neotomae* is from America** because it was obtained from a US sample. WHAT?!? We could totally do a bit of digging on this one...
+- *B. neotomae* doesn't appear to do well in other hosts because it appears "rough"... What does morphological shape have anything to do with transmissibility? Or host infectivity?  
+
+2) *B. suis* are the ancestral state, and any rodent-associated Brucella strain is derived from a domesticated hooved animal
+- Rodents life cycle are too short to circulate Brucella in the wild. Because you only find Brucella in rodents in livestock and not otherwise, this suggests that Rodents are the sink, not the source, of the pathogen.
+- Rodents require doses of infection too large to accumulate in a large number of animals to persist just within the population itself. Rodents couldn't give this to other rodents. ... *what about in milk though?*  
+
+**The final takeaway** - Meyer seems to side with Rodent-associated Brucella as being derived from another source. It's not ancestral, except for *B. neotomae*, which they don't have a specific answer for its origin, other than it is the only example of a rodent-speciic organism.  
+- 
+
+2) *B. suis* is the ancestral state. A
