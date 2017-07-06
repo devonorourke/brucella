@@ -1,0 +1,14 @@
+# running log of reviews of Brucella readings
+
+## Brucella in Australia
+[paper1](http://onlinelibrary.wiley.com/doi/10.1111/j.1751-0813.1966.tb04603.x/abstract). Cook, I., R. W. Campbell, and G. Barrow. 1966. Brucellosis in North Queensland rodents. Australian veterinary journal 42:5–8.  
+
+This paper introduced the identification of *Brucella* in rodents trapped in Jordan Creek near Palmerston National Park, located in along the east coast of central Queensland, Australia. There was little domestic cattle used in the area, though wild pigs were known to inhabit the grounds. Spleen and liver tissues were extracted from trapped rodents - 6 different species in all - and used as source material to innoculate mice with; of the 54 total rodents, 30 were *Rattus assimilis* and 16 were *Meloymys cervinipes*. A total of 7 *Brucella* strains were derived from three species: *Rattus assimilis* (4), *Melomys cervinipes* (2), and *M. lutilllus* (1).  
+
+- Serum from putatively infected mice provided serum with which agglutination tests for a variety of microorganisms were conducted, including *B. abortus*, *Coxiella burneii*, *Proteus* OX19, and several strains of *Leptospira* and *Salmonella*. Agglutination tests were *positive for *B. militensis**.  
+- Further microbiological tests includded cross immunity for *Rikettsia tsutsugamushi*, tail blood smear observations for *Eperythrozoon cocoides* and *Haemobartonella muris*, and heart blood smear for *Spirillum minus*. Inflammed spleens from infected mice were used as sources to isolate potential *Brucella* pathogens. While *E. coccoides* was identified in two of these mice, eight total isolations were identified. Seven of eight of these isolates grew on Albimi agar plates, in both 10% CO<sub>2</sub> and air (both at 37 °C). Oxidative metabolic tests indicated utilization of all eight amino acids and three carbohydrate sources tested, indicating that they are **most likely classified as *B. suis* type 3** strains.  
+- Guinea pigs were infected with four of the isolates; all died between 12-28 days. Serum agglutinated to *B. abortus* antigen.
+
+This paper proved significant because it speculated that rodents may serve as a natural reservoir with which domestic livestock may become infected. Pigs were known to eat rodents; the question is whether or not this consumption would prove to transmit one *Brucella* strain from one host to a different (presumably mammalian) host. What was unclear was whether the rodents were reservoirs of the pathogen, or if they became infected by the pigs initially. A few other natural history notes: 
+- *B. suis* is transmitted in pigs when swine suffer abortions
+- *B. suis* is also transmitted frequently through urine, making it likely that a herd is heavily contaminated in domestic conditions
