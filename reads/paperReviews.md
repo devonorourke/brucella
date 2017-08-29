@@ -1,7 +1,8 @@
 # running log of reviews of Brucella readings
 
 ## Brucella in Australia
-[Cook et. al, 1966](http://onlinelibrary.wiley.com/doi/10.1111/j.1751-0813.1966.tb04603.x/abstract)  
+
+### [Cook et. al, 1966](http://onlinelibrary.wiley.com/doi/10.1111/j.1751-0813.1966.tb04603.x/abstract)  
 Cook, I., R. W. Campbell, and G. Barrow. 1966. Brucellosis in North Queensland rodents. Australian veterinary journal 42:5–8.  
 
 This paper introduced the identification of *Brucella* in rodents trapped in Jordan Creek near Palmerston National Park, located in along the east coast of central Queensland, Australia. There was little domestic cattle used in the area, though wild pigs were known to inhabit the grounds. Spleen and liver tissues were extracted from trapped rodents - 6 different species in all - and used as source material to innoculate mice with; of the 54 total rodents, 30 were *Rattus assimilis* and 16 were *Meloymys cervinipes*. A total of 7 *Brucella* strains were derived from three species: *Rattus assimilis* (4), *Melomys cervinipes* (2), and *M. lutilllus* (1).  
@@ -13,6 +14,23 @@ This paper introduced the identification of *Brucella* in rodents trapped in Jor
 This paper proved significant because it speculated that rodents may serve as a natural reservoir with which domestic livestock may become infected. Pigs were known to eat rodents; the question is whether or not this consumption would prove to transmit one *Brucella* strain from one host to a different (presumably mammalian) host. What was unclear was whether the rodents were reservoirs of the pathogen, or if they became infected by the pigs initially. A few other natural history notes: 
 - *B. suis* is transmitted in pigs when swine suffer abortions
 - *B. suis* is also transmitted frequently through urine, making it likely that a herd is heavily contaminated in domestic conditions
+
+
+### [Tiller, 2010b](https://bmcmicrobiol.biomedcentral.com/articles/10.1186/1471-2180-10-23)  
+
+Tiller, R. V., J. E. Gee, D. R. Lonsway, S. Gribble, S. C. Bell, A. V. Jennison, J. Bates, C. Coulter, A. R. Hoffmaster, and B. K. De. 2010. Identification of an unusual Brucella strain (BO2) from a lung biopsy in a 52 year-old patient with chronic destructive pneumonia. BMC Microbiology 10:23–11.
+
+Researchers were interested in determining the phenotypic (biochemical, morphological) and genetic characteristics of a newly isolated *Brucella* strain, termed **BO2**, recently isolated from a 51 year old Australian patient suffering from pneumonia. A suite of phenotypic tests were performed as similarly described in the Tiller 2010a paper, which included growth on selective media, biochemical and agglutination assays, and phage sensitivity assays. In addition qPCR, Sanger sequencing, and MLVA were performed to provide genetic comparisons.  
+
+- **phenotypic assays:** As shown in Table 1, all phenotypic characterizations suggest that BO2 strain most closely resembls BO1 strain from *B. inopinata* sp. than any classic *Brucella* spp.  
+
+- **RT-PCR:** Two probes were available for diagnostic identification/classification of the BO2 isolate: one probe, **BI-P**, which selectively amplifies BO1 but *not* classic *Brucella* species, and probe **BRU-P** which selectively amplifies classic *Brucella* species but not *B. inoptinata* strains like BO1. The BO2 strain isolated from this patient amplified with BI-P probe but not BRU-P probe, indicating it is similar in genetic composition in that region to B01 but not the classic *Brucella* strains.  
+
+- **16S rRNA and *recA* gene sequence analysis:** Full length 16S sequences were generated from BO1 and BO2 amplicons. Sequences were aligned along with reference *Orchrobactrum* spp. strains as well as the consensus *Brucella* spp. sequence. BO2 shared 100% sequenced identity to BO1 and 99.6% identity to the consensus *Brucella* spp. sequence for the 16-S gene. However not all genes suggested BO1 and BO2 had higher conservation of sequence identity: for example *RecA* was higher in *Brucella* spp. than in BO1 (99.2 vs. 98.2%, respectively).  
+
+- **MLVA:** BO1 and BO2 contain unique VNTR profiles, but are far more similar to each other than to other classical *Brucella* spp.  
+
+Overall the BO2 strain identified is both phenotypically and genetically most similar to the *B. inopinata* strain BO1 identified from a patient from Oregon. 
 
 ## Brucella in Rodents  
 
@@ -48,7 +66,7 @@ Meyer, on pages 265-266, suggests that researchers have split into two camps, of
 **The final takeaway** - Meyer seems to side with Rodent-associated Brucella as being derived from another source. It's not ancestral, except for *B. neotomae*, which they don't have a specific answer for its origin, other than it is the only example of a rodent-speciic organism.  
 
 
-### [Tiller, 2010](http://aem.asm.org/content/76/17/5837.full)  
+### [Tiller, 2010a](http://aem.asm.org/content/76/17/5837.full)  
 
 Tiller, R. V., J. E. Gee, M. A. Frace, T. K. Taylor, J. C. Setubal, A. R. Hoffmaster, and B. K. De. 2010. Characterization of Novel Brucella Strains Originating from Wild Native Rodent Species in North Queensland, Australia. Applied and Environmental Microbiology 76:5837–5845.  
 
@@ -81,8 +99,6 @@ As a follow up to the preliminary work by Cook et. al, this work investigated th
 - I'm unclear why they incorporate *Brucella* sp. 83-13 in some analyses but not in others. When they talk about the MLVA and MUMi work it's included, but when they do the MLSA and single-gene tree building it's exluded - what gives?  
 - Mixed results occur when examining phylogenetic relationships using single-gene trees. Even their MLSA approach using multiple genes is suspicious - while they get 100% identity to a rodent-isolate strain (*Brucella* sp. 83-13), they used a consensus of the Australian rodent isolates to conduct these tests. I'm unclear why they didn't just build trees from individual strains and identify where along the tree these seven individual isolates clustered.
 - The consensus Australian rodent sequence shows significant sequence divergence from all other B. suis strains used in their large Brucella family tree. **I'm pretty sure we get mixed results depending on which strain is input in our data**.  
+- Side note: the seven Brucella isolates are now part of a broader CDC collection in Atlanta
 
 
-incorporating a handful of gene sequences and multi-locus sequence typing (MLST). They indicate that the sequences are distinct from *Brucella spp.* and likely represent a unique Brucella species; in addition, while the gene sequences of the seven isolates were highly similar, MLST results indicated enough variation to support a monophyletic clade to group each of these isolates. 
-
-Side note: the seven Brucella isolates are now part of a broader CDC collection in Atlanta
