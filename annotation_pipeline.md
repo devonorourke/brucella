@@ -116,19 +116,38 @@ do
 done
 ```
 
+**Note that the .sam files were removed following the creation of the indexed .bam and .bai files**. You can always convert .bam back to .sam.  
+
 ## Creating fasta files from .sam files (generating a consensus sequence):
-Side note - see [this page](http://www.metagenomics.wiki/tools/samtools/consensus-sequence) for further info on where these commands were taken from.  
-We're going to derive a consensus .fasta sequence by first converting our .bam to .fastq, then use the quality information in that .fq file to filter our .fa file a bit. Rather than splitting up the script into multiple sections we're going to just pipe everything in one long command.
+See [this page](http://www.metagenomics.wiki/tools/samtools/consensus-sequence) for further info on where these commands were taken from. I had to install bcftools directly (not on Premise) which amounted to following [these directions](http://www.htslib.org/download/). I used the file existing directory as the location to install the `bin` folder containing the programs, then made symbolic links to my `$HOME/bin` directory for all those programs so that they could be called from my existing $PATH variable (ie. I didn't export any new $PATH).  
+We're going to derive a consensus .fasta sequence by first converting our .bam to .fastq, then use the quality information in that .fq file to filter our .fa file a bit. Rather than splitting up the script into multiple sections we're going to just pipe everything in one long command. As with the last few commands, I'm not showing the slurm submission shell script.
 ```
 #!/bin/bash
 cd /mnt/lustre/macmaneslab/devon/bruce/bwa
-ID_LIST=`ls *.sam | sed 's/.bam//' | sort -u`
+ID_LIST=`ls *.bam | sed 's/.bam//' | sort -u`
 for READ in $ID_LIST
 do
 samtools mpileup -uf Brucella_sp_8313.fasta ${READ}.bam | bcftools call -c | vcfutils.pl vcf2fq | \
-seqtk seq -q20 -n N > ${READ}.fasta
+seqtk seq -q20 -n N > /mnt/lustre/macmaneslab/devon/bruce/samp_fastas/${READ}.fasta
 done
 ```
 
-# Annotating the fasta file
-We'll use Prokka as our gene annotation program for good reasons (because it's what's available!). 
+## Annotation using Prokka
+We'll use Prokka as our gene annotation program for good reasons (because it's what's available!). See [here](https://github.com/tseemann/prokka#invoking-prokka) for some example commands from the program's Github page.  
+
+```
+#!/bin/bash
+cd /mnt/lustre/macmaneslab/devon/bruce/samp_fasta
+ID_LIST=`ls *.fasta | sed 's/.fasta//' | sort -u`
+for READ in $ID_LIST
+do
+	prokka \
+	--prefix ${READ} \
+	--genus Brucella \
+	--usegenus \
+	--gram neg \
+	--cpus 0 \
+	{READ}.fasta
+done
+```
+
