@@ -64,7 +64,7 @@ srun skewer.sh
 ```
 
 ## Aligning reads
-There are two steps when using the Burrows-Wheeler Aligner (BWA) program: indexing the reference genome, and then performing the alignment itself. Becuase you only index a single reference, I've put that command into a single slurm-executed shell script; however the alignment program is split between a job submission script and an alignment script. I've also created symbolic links within a new parent directory `bwa` to contain the trimmed .fq files.
+There are two steps when using the [Burrows-Wheeler Aligner (BWA) program](http://bio-bwa.sourceforge.net/bwa.shtml): indexing the reference genome, and then performing the alignment itself. Becuase you only index a single reference, I've put that command into a single slurm-executed shell script; however the alignment program is split between a job submission script and an alignment script. I've also created symbolic links within a new parent directory `bwa` to contain the trimmed .fq files. **Note that these sym. links were manually removed following the completion of the script and won't appear in the directory**
 
 Indexing the reference, *Brucella* sp. 83-13:  
 ```
@@ -98,4 +98,37 @@ done
 
 The slurm submission script (not shown) followed just like the skewer submission script with the substitution of job and log file names.
 
+## Converting .sam files to indexed .bam files
+Side note - see [this page](https://davetang.org/wiki/tiki-index.php?page=SAMTools) for a million helpful one-liners when working with .sam and .bam files (and more).  
+This process is a helpful step to save time and memory for generating a consensus fasta sequence. Besides the generic slurm script (not shown), there is a two-part shells script which first compresses the .sam to .bam file, then indexes that .bam file.  
+```
+#!/bin/bash
+cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+ID_LIST=`ls *.sam | sed 's/.sam//' | sort -u`
+for READ in $ID_LIST
+do
+  samtools view -bS ${READ}.sam | samtools sort - -o ${READ}.bam
+done
 
+for READ in $ID_LIST
+do
+  samtools index ${READ}.bam ${READ}.bai
+done
+```
+
+## Creating fasta files from .sam files (generating a consensus sequence):
+Side note - see [this page](http://www.metagenomics.wiki/tools/samtools/consensus-sequence) for further info on where these commands were taken from.  
+We're going to derive a consensus .fasta sequence by first converting our .bam to .fastq, then use the quality information in that .fq file to filter our .fa file a bit. Rather than splitting up the script into multiple sections we're going to just pipe everything in one long command.
+```
+#!/bin/bash
+cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+ID_LIST=`ls *.sam | sed 's/.bam//' | sort -u`
+for READ in $ID_LIST
+do
+samtools mpileup -uf Brucella_sp_8313.fasta ${READ}.bam | bcftools call -c | vcfutils.pl vcf2fq | \
+seqtk seq -q20 -n N > ${READ}.fasta
+done
+```
+
+# Annotating the fasta file
+We'll use Prokka as our gene annotation program for good reasons (because it's what's available!). 
