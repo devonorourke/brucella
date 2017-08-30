@@ -63,3 +63,39 @@ module load linuxbrew/colsa
 srun skewer.sh
 ```
 
+## Aligning reads
+There are two steps when using the Burrows-Wheeler Aligner (BWA) program: indexing the reference genome, and then performing the alignment itself. Becuase you only index a single reference, I've put that command into a single slurm-executed shell script; however the alignment program is split between a job submission script and an alignment script. I've also created symbolic links within a new parent directory `bwa` to contain the trimmed .fq files.
+
+Indexing the reference, *Brucella* sp. 83-13:  
+```
+#!/bin/bash
+#SBATCH -D /mnt/lustre/macmaneslab/devon/bruce/bwa
+#SBATCH -p macmanes,shared
+#SBATCH --job-name="oro-bwaIndex"
+#SBATCH --ntasks=1
+#SBATCH --output=bwaIndex.log
+
+module purge
+module load linuxbrew/colsa
+
+srun bwa index Brucella_sp_8313.fasta
+```
+
+Then creating a script for running the alignment program using the trimmed .fq files:  
+```
+#!/bin/bash
+cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+ID_LIST=`ls *.gz | grep "trim" | sed 's/-.*//' | sort -u`
+for READ in $ID_LIST
+do
+	bwa mem Brucella_sp_8313.fasta \
+  -M \
+  -t 24 \
+  ${READ}-trimmed-pair1.fastq.gz ${READ}-trimmed-pair2.fastq.gz > \
+  ${READ}.sam
+done
+```
+
+The slurm submission script (not shown) followed just like the skewer submission script with the substitution of job and log file names.
+
+
