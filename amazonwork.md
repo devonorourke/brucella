@@ -58,9 +58,10 @@ done
 
 
 # actually run Roary
-See more details about [install](https://github.com/sanger-pathogens/Roary/blob/master/README.md) and [executing](https://github.com/microgenomics/tutorials/blob/master/pangenome.md) scripts. Ran their generic command first:
+See more details about [install](https://github.com/sanger-pathogens/Roary/blob/master/README.md) and [executing](https://github.com/microgenomics/tutorials/blob/master/pangenome.md) scripts.  
+First thing to do is create sym links for the .gff files from the Prokka output into a new `Roary` directory. Once those are in place you can execute their pretty generic command:
 ```
-roary -f ./demo -e -n -v ./gff/*.gff
+roary -e -n -v *.gff
 ```
 
 
