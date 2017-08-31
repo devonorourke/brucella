@@ -128,7 +128,7 @@ ID_LIST=`ls *.bam | sed 's/.bam//' | sort -u`
 for READ in $ID_LIST
 do
 samtools mpileup -uf Brucella_sp_8313.fasta ${READ}.bam | bcftools call -c | vcfutils.pl vcf2fq | \
-seqtk seq -q20 -n N > /mnt/lustre/macmaneslab/devon/bruce/samp_fastas/${READ}.fasta
+seqtk seq -q20 -n N -A > /mnt/lustre/macmaneslab/devon/bruce/samp_fastas/${READ}.fa
 done
 ```
 
