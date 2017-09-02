@@ -58,14 +58,18 @@ sudo ln -s /home/ubuntu/barrnap-0.8/bin/barrnap
 ```
 
 ## prokka itself
+Download to home directory and place a link to binary in `/bin`
 ```
 cd $HOME
 git clone https://github.com/tseemann/prokka.git
 cd prokka/bin/
 ./prokka --setupdb
+sudo ln -s /home/ubuntu/prokka/bin/prokka /bin/.
 ```
 
-# actually run prokka
+# lets run some programs!
+
+## actually run prokka
 I transferred all .fasta files from the **broad** external references as well as all the Australian samples. These were put in a single `fastas` directory within the `$HOME` directory. All files were then annotated with Prokka as noted in the shell script **prokka.sh** below. Make sure to first make the shell script executable before running (`chmod +x prokka.sh`)!
 
 ```
@@ -84,7 +88,7 @@ done
 ```
 
 
-# actually run Roary
+## actually run Roary
 See more details about [install](https://github.com/sanger-pathogens/Roary/blob/master/README.md) and [executing](https://github.com/microgenomics/tutorials/blob/master/pangenome.md) scripts.  
 First thing to do is create sym links for the .gff files from the Prokka output into a new `Roary` directory. Once those are in place you can execute their pretty generic command:
 ```
