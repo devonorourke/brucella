@@ -133,6 +133,13 @@ done
 ```
 
 ## Annotation using Prokka
+One word of caution... The output .fa files (for each Australian sample) have pipe's separating out the header elements - that is, they exactly match the ** *Brucella* sp. 83-13** input sample we provided. This shouldn't be a problem with running Prokka, but if you need to manipulate headers you can do that with a one-liner `sed` command as follows. Just make sure you apply it to **both the samples and the reference** fastas:
+
+```
+## changing headers in fasta (no specific file name given):
+sed -i '/^>sid/s/ /-/g' {whatevername}.fa
+```
+
 We'll use Prokka as our gene annotation program for good reasons (because it's what's available!). See [here](https://github.com/tseemann/prokka#invoking-prokka) for some example commands from the program's Github page.  
 
 ```
