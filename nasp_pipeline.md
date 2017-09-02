@@ -92,6 +92,3 @@ N
 #run VarScan?
 N
 ```
-
-
-nasp-1.0.2/lib/python3.6/site-packages/nasp/nasptool_linux_64
