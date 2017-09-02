@@ -17,14 +17,24 @@ Because I was having a lot of trouble with a few of the programs functioning, I 
 conda create --name mynasp --clone nasp-1.0.2
 ```
 
-Once that virtual environment is installed you're going to want to edit the `dispatcher.py` located at `$HOME/.conda/envs/mynasp/lib/python3.6/site-packages/nasp` with the following things in mind:
+Once that virtual environment is installed you're going to want to edit the `dispatcher.py` located at `$HOME/.conda/envs/mynasp/lib/python3.6/site-packages/nasp`. Specifically, there are a pair of lines (lines 443 and 444) which should be substituted as follows:
+```
+## original code to change
+command_parts = ["%s mpileup -uD -d 10000000 -f %s %s" % (sampath, reference, bam_file),
+                     "%s view -ceg %s - > %s" % (path, args, final_file)]
+
+## edited code to insert
+command_parts = ["%s mpileup -u -t DP -d 8000 -f %s %s" % (sampath, reference, bam_file),
+                     "bcftools call -c > %s" % (final_file)]
+```
+It turns out we were using an unnecessary depth of reads in the pileup file (`-d 1000000` is ridiculous). Moreover, we were using an older series of flags within the `samtools view` argument to create the .vcf file call, but those don't exist anymore with the update samtools package that is installed within this `nasp` virtual environment package. Once those edits are made, save that file (overwrite the existing one), and you'll be set to start running the program.
 
 ## On to actually running NASP!
 
 Thereafter you need to simply execute a series of filepaths (always use the full path) as well as a few other questions. In general we're going to use the default questions through these prompts. All responses for the various `nasp` runs are indicated below. 
 
 ### Broad analysis:
-These commands were used for the "broad" output - using a handful of Brucella representing many disparate clades.
+These commands were used for the "broad" output - using a handful of Brucella representing many disparate clades. Followed default setting when not specified. 
 ```
 #output:
 /mnt/lustre/macmaneslab/devon/bruce/nasp/results_all/broad_results
@@ -32,36 +42,25 @@ These commands were used for the "broad" output - using a handful of Brucella re
 #reference path:
 /mnt/lustre/macmaneslab/devon/bruce/nasp/rodent_ref/Brucella_sp_8313.fasta
 
-#check for dups?
-Y
-
 #job manager?
 SLURM
   #partition?
   macmanes
-  #additional requirements?
-  {blank}
-
+ 
 #external references:
 /mnt/lustre/macmaneslab/devon/bruce/nasp/external_refs_all/broad_refs
-  #advanced NUCmer?
-  no
 
-#read fasta files:
-/mnt/lustre/macmaneslab/devon/bruce/nasp/australia_samps
-
-#pre-aligned SAM/BAM files to include?
+#read files?
 N
 
 #pre-called VCFs?
-N
-
-#advanced matrix generator settings?
-N
+Y
+  #where?
+  /mnt/lustre/macmaneslab/devon/bruce/nasp/results_all/narrow_results/samtools
 ```
 
 ### Narrow analysis
-These settings were used for the narrow experiment: narrow in the sense that we only provided a single external genome (Brucella_sp_NF2653) instead of the many various Brucella samples. Same reference used for alignment (B.sp_8313)
+These settings were used for the narrow experiment: narrow in the sense that we only provided a single external genome (Brucella_sp_NF2653) instead of the many various Brucella samples. Same reference used for alignment (B.sp_8313). Followed default setting when not specified. 
 
 ```
 #output:
@@ -70,38 +69,27 @@ These settings were used for the narrow experiment: narrow in the sense that we 
 #reference path:
 /mnt/lustre/macmaneslab/devon/bruce/nasp/rodent_ref/Brucella_sp_8313.fasta
 
-#check for dups and skip SNPs?
-Y
-
 #job manager?
 SLURM
   #partition?
   macmanes
-  #additional requirements?
-  {default}
 
 #external references:
 /mnt/lustre/macmaneslab/devon/bruce/nasp/external_refs_all/narrow_refs
-  #advanced NUCmer?
-  no
 
 #read fastq files:
-N
-
-#pre-aligned SAM/BAM files to include?
 Y
 
 #where?
-/mnt/lustre/macmaneslab/devon/bruce/nasp/australia_bams
+/mnt/lustre/macmaneslab/devon/bruce/nasp/australia_fq
 
-#pre-called VCFs?
+#run Bowtie2?
 N
-  #min coverage threshold [10]?
-  {default}
-  #min acceptable proportion[0.9]?
-  {default}
 
-#advanced matrix generator settings?
+#run GATK?
+N
+
+#run VarScan?
 N
 ```
 
