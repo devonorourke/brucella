@@ -183,27 +183,31 @@ grep "Brucella_sp" databaseList.txt 	#our species is listed as "Brucella_sp_83_1
 java -jar ~/bin/snpEff.jar download Brucella_sp_83_13
 ```
 
-Now we can annotate the .vcf file. See their [manual page](http://snpeff.sourceforge.net/SnpEff_manual.html) for loads of helpful flags to pass. I've created a short shell script to exeucte this with SLURM:
+Now we can annotate the .vcf file. See their [manual page](http://snpeff.sourceforge.net/SnpEff_manual.html) for loads of helpful flags to pass. I've created a short shell script to exeucte this with SLURM, but for such a tiny file you could really just do this from the head node directly on our compute cluster. Unlike other shell scripts, be sure to execute the script within `/mnt/lustre/macmaneslab/devon/bruce/snpEff/`, and specify the full path to the shell script (`/mnt/lustre/macmaneslab/devon/bruce/scripts/snpEff.sh`). In other words, create this shell file:
+
 ```
 #!/bin/bash
-#SBATCH -D /mnt/lustre/macmaneslab/devon/bruce/scripts
+#SBATCH -D /mnt/lustre/macmaneslab/devon/bruce/snpEff/
 #SBATCH -p macmanes,shared
-#SBATCH --job-name="oro-vcfs"
+#SBATCH --job-name="oro-snpEff"
 #SBATCH --ntasks=1
-#SBATCH --output=australia_vcfs.log
+#SBATCH --output=snpEff.log
 
 module purge
 module load linuxbrew/colsa
 
-cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+cd /mnt/lustre/macmaneslab/devon/bruce/snpEff
 
-ID_LIST=`ls *.bam`
+srun java -jar ~/bin/snpEff.jar \
+Brucella_sp_83_13 \
+/mnt/lustre/macmaneslab/devon/bruce/vcfs/australia.vcf > \
+/mnt/lustre/macmaneslab/devon/bruce/snpEff/australia_ann.vcf
+```
 
-srun samtools mpileup -uf Brucella_sp_8313.fasta $ID_LIST | \
-bcftools call --consensus-caller --variants-only --ploidy 1 > \
-/mnt/lustre/macmaneslab/devon/bruce/vcfs/australia.vcf
-
-java -Xmx4g -jar ~/binsnpEff.jar GRCh37.75 examples/test.chr22.vcf > test.chr22.ann.vcf
+Make the script executable (`chmod +x`) and then execute the command as follows:
+```
+cd /mnt/lustre/macmaneslab/devon/bruce/snpEff
+sbatch /mnt/lustre/macmaneslab/devon/bruce/scripts/snpEff.sh
 ```
 
 ## Annotation using Prokka
