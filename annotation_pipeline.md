@@ -240,15 +240,15 @@ So we find there are a series of mutation types:
 - upstream_gene_variant  
 
 Two possible things to filter here:  
-First, we might want to just keep the `missense_variant` SNPs *and nothing else*:
+First, we might want to just keep annotations which include `missense_variant` SNPs (be careful, as this doesn't specify *where* the SNP occurs - you'll need to filter that out with an additional command).
 ```
-java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'missense_variant'" australia-qualfilt.ann.vcf > \
-australia-missenseOnly.ann.vcf
+java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'missense_variant'" australia-qualfilt.ann.vcf > {filename}.ann.vcf
 ```
 
 Second, we might want to just filter **out** one specific variant type, say `synonymous_variant`, but *nothing else*:
-
-
+```
+java -jar ~/bin/SnpSift.jar filter "( ANN[*].EFFECT != 'synonymous_variant' )" australia-qualfilt.ann.vcf > {filename}.ann.vcf
+```
 
 ## Annotation using Prokka
 One word of caution... The output .fa files (for each Australian sample) have pipe's separating out the header elements - that is, they exactly match the ** *Brucella* sp. 83-13** input sample we provided. This shouldn't be a problem with running Prokka, but if you need to manipulate headers you can do that with a one-liner `sed` command as follows. Just make sure you apply it to **both the samples and the reference** fastas:
