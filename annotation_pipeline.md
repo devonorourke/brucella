@@ -132,6 +132,80 @@ seqtk seq -q20 -n N -A > /mnt/lustre/macmaneslab/devon/bruce/samp_fastas/${READ}
 done
 ```
 
+## detour before Prokka --> making a .vcf file and annotating that instead of making Prokka do the work
+Needed to create a .vcf file which basically takes a portion of the script above (calling a consensus fasta) and just cuts it at the `bcftools call ...` step, rather than taking that .vcf file and converting into a .fq/.fa file. First part of the detour involves generating that .vcf file; second part of the detour invovlves annotating that .vcf file directly with a package called [snpEff](http://snpeff.sourceforge.net/index.html).  
+
+First, the .vcf file. Note that within the `bcftools call` argument we're specifying that we're dealing with haploids here.
+```
+#!/bin/bash
+#SBATCH -D /mnt/lustre/macmaneslab/devon/bruce/scripts
+#SBATCH -p macmanes,shared
+#SBATCH --job-name="oro-vcfs"
+#SBATCH --ntasks=1
+#SBATCH --output=australia_vcfs.log
+
+module purge
+module load linuxbrew/colsa
+
+cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+
+ID_LIST=`ls *.bam`
+
+srun samtools mpileup -uf Brucella_sp_8313.fasta $ID_LIST | \
+bcftools call --consensus-caller --variants-only --ploidy 1 > \
+/mnt/lustre/macmaneslab/devon/bruce/vcfs/australia.vcf
+```
+
+Next, we're going to install snpEff and use it to annotate the .vcf file. See [install instructions](http://snpeff.sourceforge.net/download.html) for more details. Briefly:
+```
+## Install package and create soft link to .jar files in $HOME/bin
+cd $HOME/pkgs
+wget http://sourceforge.net/projects/snpeff/files/snpEff_latest_core.zip
+unzip snpEff_latest_core.zip
+ln -s /mnt/lustre/macmaneslab/devon/pkgs/snpEff/*.jar /mnt/lustre/macmaneslab/devon/bin/
+	## note you'll still need to specify the path to the .jar files as $HOME/bin (it just shortens it up a bit)
+```
+
+Create the database you want. First, download a list of databases available. Then perform a grep search to find which one you want. Then download it.
+```
+## download the list:
+cd $HOME/bruce
+mkdir snpEff
+cd snpEff
+java -jar ~/bin/snpEff.jar databases > databaseList.txt
+
+## find the 83-13 reference Brucella:
+grep -c "Brucella" databaseList.txt	#yields 332 entries
+grep -c "Brucella_sp" databaseList.txt	#yields 16 entries
+grep "Brucella_sp" databaseList.txt 	#our species is listed as "Brucella_sp_83_13"
+
+## download your database:
+java -jar ~/bin/snpEff.jar download Brucella_sp_83_13
+```
+
+Now we can annotate the .vcf file. See their [manual page](http://snpeff.sourceforge.net/SnpEff_manual.html) for loads of helpful flags to pass. I've created a short shell script to exeucte this with SLURM:
+```
+#!/bin/bash
+#SBATCH -D /mnt/lustre/macmaneslab/devon/bruce/scripts
+#SBATCH -p macmanes,shared
+#SBATCH --job-name="oro-vcfs"
+#SBATCH --ntasks=1
+#SBATCH --output=australia_vcfs.log
+
+module purge
+module load linuxbrew/colsa
+
+cd /mnt/lustre/macmaneslab/devon/bruce/bwa
+
+ID_LIST=`ls *.bam`
+
+srun samtools mpileup -uf Brucella_sp_8313.fasta $ID_LIST | \
+bcftools call --consensus-caller --variants-only --ploidy 1 > \
+/mnt/lustre/macmaneslab/devon/bruce/vcfs/australia.vcf
+
+java -Xmx4g -jar ~/binsnpEff.jar GRCh37.75 examples/test.chr22.vcf > test.chr22.ann.vcf
+```
+
 ## Annotation using Prokka
 One word of caution... The output .fa files (for each Australian sample) have pipe's separating out the header elements - that is, they exactly match the ** *Brucella* sp. 83-13** input sample we provided. This shouldn't be a problem with running Prokka, but if you need to manipulate headers you can do that with a one-liner `sed` command as follows. Just make sure you apply it to **both the samples and the reference** fastas:
 
