@@ -221,7 +221,7 @@ java -jar ~/bin/SnpSift.jar filter "( DP > 100 ) & ( QUAL >= 20 )" \
 /mnt/lustre/macmaneslab/devon/bruce/snpEff/australia_ann.vcf \
 > /mnt/lustre/macmaneslab/devon/bruce/snpEff/australia-qualfilt.ann.vcf
 ```
-This results in a file containing 255 raw SNPs filtered down to 238 SNPs.  
+**This results in a file containing 255 raw SNPs filtered down to 237 SNP sites.  **
 
 #### Non synonymous sites only
 There are a many different variables you could filter from the annotated .vcf file. For example, you may decide to filter by the type of variant described. To get a list of all the possible strings (names) that this variable could encompass you'll need to apply the little one-liner below. One thing to manipulate would be the second `cut` command, moving the `f` field delimiter around for the various annotations. In this instance, we're targeting the second chunk of the last field of the .vcf file (the annotation field), which describes whether the mutation is a missense mutation, synonymous variant, or something else:
@@ -239,15 +239,19 @@ So we find there are a series of mutation types:
 - synonymous_variant
 - upstream_gene_variant  
 
-Two possible things to filter here:  
-First, we might want to just keep annotations which include `missense_variant` SNPs (be careful, as this doesn't specify *where* the SNP occurs - you'll need to filter that out with an additional command).
+Some filtering options to consider... First, we might want to just keep annotations which include `missense_variant` SNPs. Be careful though, as this doesn't specify *where* the SNP occurs - you'll need to filter that out with an additional command. It's complicated by the fact that multiple variant types can be applied to a single SNP call; for example, an `upstream_gene_variant` can also be a `missense_variant`. So while you're getting a missense mutation, it might be in an area of the genome that isn't of particular interest to you.
 ```
-java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'missense_variant'" australia-qualfilt.ann.vcf > {filename}.ann.vcf
+java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'missense_variant'" \
+australia-qualfilt.ann.vcf > australia-missenseOnly.ann.vcf
 ```
+**this yields 77 remaining SNP entries**
 
-Second, we might want to just filter **out** one specific variant type, say `synonymous_variant`, but *nothing else*:
+You may also want to create a separate .vcf file containing other EFFECT types. For example it likely would be useful to consider `frameshift_variant`, `stop_gained`, and others. These aren't noted here at the moment but take note that SnpEff has a [program to join multiple .vcf files](http://snpeff.sourceforge.net/SnpSift.html#Join). You could also string together a single search function, but because it's not clear which of these EFFECTS you necessarily want to investigate it's nice to have them all separate at first.
+
+
+There's another helpful command that can eliminate a lot of the annotation stuff if all you want is the **EFFECT** info once you've filtered out much of everything else. Makes for an easy import into another program like Excel, R, or Python.
 ```
-java -jar ~/bin/SnpSift.jar filter "( ANN[*].EFFECT != 'synonymous_variant' )" australia-qualfilt.ann.vcf > {filename}.ann.vcf
+java -jar ~/bin/SnpSift.jar extractFields australia-missenseOnly.ann.vcf CHROM POS REF ALT "ANN[*].EFFECT" > australia-missenseOnly.reduced.vcf
 ```
 
 ## Annotation using Prokka
