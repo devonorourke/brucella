@@ -209,6 +209,46 @@ Make the script executable (`chmod +x`) and then execute the command as follows:
 cd /mnt/lustre/macmaneslab/devon/bruce/snpEff
 sbatch /mnt/lustre/macmaneslab/devon/bruce/scripts/snpEff.sh
 ```
+The output of this file provides the raw variant calls - note there are no depth, quality, or variant type filtered out among these calls - those are done next.  
+
+### Filtering the .vcf file
+We can apply a suite of filters to this annotated variant call file (`{name}.ann.vcf`). This is done using a related program to `snpEff` called **SnpSift**. This should be executed using a shell script for larger files but takes about 5 seconds for .vcf files that have less than 200 SNPs total... so what I've put below is the non-shell script portion of that code.  
+
+#### Basic quality and depth filters
+First, let's filter any sites which contain an average Phred-scaled quality score of less than 20 AND contain a depth of less than 100 (we usually have really high coverage for all sites, and this `100` is an aggregate of the 8 samples, so this is really more of an average of about 12 reads per site assuming that all 8 samples are present in the SNP).  
+```
+java -jar ~/bin/SnpSift.jar filter "( DP > 100 ) & ( QUAL >= 20 )" \
+/mnt/lustre/macmaneslab/devon/bruce/snpEff/australia_ann.vcf \
+> /mnt/lustre/macmaneslab/devon/bruce/snpEff/australia-qualfilt.ann.vcf
+```
+This results in a file containing 255 raw SNPs filtered down to 238 SNPs.  
+
+#### Non synonymous sites only
+There are a many different variables you could filter from the annotated .vcf file. For example, you may decide to filter by the type of variant described. To get a list of all the possible strings (names) that this variable could encompass you'll need to apply the little one-liner below. One thing to manipulate would be the second `cut` command, moving the `f` field delimiter around for the various annotations. In this instance, we're targeting the second chunk of the last field of the .vcf file (the annotation field), which describes whether the mutation is a missense mutation, synonymous variant, or something else:
+```
+grep -v "^#" australia-qualfilt.ann.vcf | awk '{print $8}' | cut -f 17 -d ';' | cut -f 2 -d '|' | sort -u
+```
+So we find there are a series of mutation types:  
+- conservative_inframe_deletion
+- disruptive_inframe_insertion
+- frameshift_variant
+- frameshift_variant&stop_gained
+- missense_variant
+- stop_gained
+- stop_lost&splice_region_variant&conservative_inframe_deletion
+- synonymous_variant
+- upstream_gene_variant  
+
+Two possible things to filter here:  
+First, we might want to just keep the `missense_variant` SNPs *and nothing else*:
+```
+java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'missense_variant'" australia-qualfilt.ann.vcf > \
+australia-missenseOnly.ann.vcf
+```
+
+Second, we might want to just filter **out** one specific variant type, say `synonymous_variant`, but *nothing else*:
+
+
 
 ## Annotation using Prokka
 One word of caution... The output .fa files (for each Australian sample) have pipe's separating out the header elements - that is, they exactly match the ** *Brucella* sp. 83-13** input sample we provided. This shouldn't be a problem with running Prokka, but if you need to manipulate headers you can do that with a one-liner `sed` command as follows. Just make sure you apply it to **both the samples and the reference** fastas:
