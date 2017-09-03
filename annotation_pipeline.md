@@ -248,6 +248,17 @@ australia-qualfilt.ann.vcf > australia-missenseOnly.ann.vcf
 
 You may also want to create a separate .vcf file containing other EFFECT types. For example it likely would be useful to consider `frameshift_variant`, `stop_gained`, and others. These aren't noted here at the moment but take note that SnpEff has a [program to join multiple .vcf files](http://snpeff.sourceforge.net/SnpSift.html#Join). You could also string together a single search function, but because it's not clear which of these EFFECTS you necessarily want to investigate it's nice to have them all separate at first.
 
+```
+## for Stop Gains
+java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'stop_gained'" \
+australia-qualfilt.ann.vcf > australia-stopgained.ann.vcf
+
+## for Frameshifts
+java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'frameshift_variant'" \
+australia-qualfilt.ann.vcf > australia-frameshifts.ann.vcf
+```
+
+And if you want to join up these .vcf files
 
 There's another helpful command that can eliminate a lot of the annotation stuff if all you want is the **EFFECT** info once you've filtered out much of everything else. Makes for an easy import into another program like Excel, R, or Python.
 ```
