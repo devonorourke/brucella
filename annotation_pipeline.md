@@ -246,7 +246,7 @@ australia-qualfilt.ann.vcf > australia-missenseOnly.ann.vcf
 ```
 **this yields 77 remaining SNP entries**
 
-You may also want to create a separate .vcf file containing other EFFECT types. For example it likely would be useful to consider `frameshift_variant`, `stop_gained`, and others. These aren't noted here at the moment but take note that SnpEff has a [program to join multiple .vcf files](http://snpeff.sourceforge.net/SnpSift.html#Join). You could also string together a single search function, but because it's not clear which of these EFFECTS you necessarily want to investigate it's nice to have them all separate at first.
+You may also want to create a separate .vcf file containing other EFFECT types. For example it likely would be useful to consider `frameshift_variant`, `stop_gained`, and others. You could also string together a single search function, but because it's not clear which of these EFFECTS you necessarily want to investigate it's nice to have them all separate at first. Here are two such individual files:
 
 ```
 ## for Stop Gains
@@ -258,12 +258,28 @@ java -jar ~/bin/SnpSift.jar filter "ANN[*].EFFECT has 'frameshift_variant'" \
 australia-qualfilt.ann.vcf > australia-frameshifts.ann.vcf
 ```
 
-And if you want to join up these .vcf files
+If you want to join up these smaller .vcf files you can use `bcftools`. You'll need to compress each file to be conacatenated, and then indexed before you can group the .vcf files you want together.  
+```
+## compress the files you want to concatenate
+bgzip australia-missenseOnly.vcf
+bgzip australia-stopgained.vcf
+bgzip australia-frameshifts.vcf
+
+## index the compressed files
+tabix -p vcf australia-frameshifts.vcf.gz 
+tabix -p vcf australia-missenseOnly.vcf.gz 
+tabix -p vcf australia-stopgained.vcf.gz
+
+## concatenate the three files into a single file
+bcftools concat -a australia-frameshifts.vcf.gz australia-missenseOnly.vcf.gz australia-stopgained.vcf.gz > australia-StopFrameMis.vcf
+```
 
 There's another helpful command that can eliminate a lot of the annotation stuff if all you want is the **EFFECT** info once you've filtered out much of everything else. Makes for an easy import into another program like Excel, R, or Python.
 ```
-java -jar ~/bin/SnpSift.jar extractFields australia-missenseOnly.ann.vcf CHROM POS REF ALT "ANN[*].EFFECT" > australia-missenseOnly.reduced.vcf
+java -jar ~/bin/SnpSift.jar extractFields australia-StopFrameMis.vcf CHROM POS REF ALT "ANN[*].EFFECT" > \
+australia-StopFrameMis.reduced.vcf
 ```
+
 
 ## Annotation using Prokka
 One word of caution... The output .fa files (for each Australian sample) have pipe's separating out the header elements - that is, they exactly match the ** *Brucella* sp. 83-13** input sample we provided. This shouldn't be a problem with running Prokka, but if you need to manipulate headers you can do that with a one-liner `sed` command as follows. Just make sure you apply it to **both the samples and the reference** fastas:
