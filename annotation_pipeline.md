@@ -274,10 +274,31 @@ tabix -p vcf australia-stopgained.vcf.gz
 bcftools concat -a australia-frameshifts.vcf.gz australia-missenseOnly.vcf.gz australia-stopgained.vcf.gz > australia-StopFrameMis.vcf
 ```
 
+**a few other little helpful extra scripts**
+You can also remove the annotations completely and re-annotate with these filtered .vcf files - see [snpEff manual](http://snpeff.sourceforge.net/SnpSift.html#rmInfo) for more info. Why do this? To be certain that you haven't accidentally added multiple annotations throughout the process. So all you're doing is starting with the .vcf file you have filtered to what you want, then strip the annotations, then reannotate them.
+```
+## strip the annotations
+java -jar ~/bin/SnpSift.jar rmInfo australia-StopFrameMis.vcf ANN > australia-StopFrameMis-noinfo.vcf
+
+## reannotate this file
+srun java -jar ~/bin/snpEff.jar \
+Brucella_sp_83_13 \
+/mnt/lustre/macmaneslab/devon/bruce/snpEff/australia-StopFrameMis-noinfo.vcf > \
+/mnt/lustre/macmaneslab/devon/bruce/snpEff/australia-StopFrameMis-ann.vcf
+```
+
 There's another helpful command that can eliminate a lot of the annotation stuff if all you want is the **EFFECT** info once you've filtered out much of everything else. Makes for an easy import into another program like Excel, R, or Python.
 ```
-java -jar ~/bin/SnpSift.jar extractFields australia-StopFrameMis.vcf CHROM POS REF ALT "ANN[*].EFFECT" > \
-australia-StopFrameMis.reduced.vcf
+java -jar ~/bin/SnpSift.jar extractFields australia-StopFrameMis-ann.vcf CHROM POS REF ALT "ANN[*].EFFECT" | \
+cut -f1-5 > australia-StopFrameMis.reduced.vcf
+```
+You can combine that stripped-down file with a one-liner to keep a select amount of the annotation that you want:
+```
+## this keeps all first records
+grep -v "^#" australia-StopFrameMis-ann.vcf | cut -f 8 | cut -d '|' -f1-15 > australia-StopFrameMis-manyANNs.txt	
+
+## this keeps only the effect type, gene name, transcript name, and mutation action
+grep -v "^#" australia-StopFrameMis-ann.vcf | cut -f 8 | cut -d '|' -f2,4,7,10 > australia-StopFrameMis-fewANNs.txt
 ```
 
 
